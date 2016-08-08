@@ -7,7 +7,7 @@ EDIT = sed -e 's,[@]pythondir[@],$(pythondir),g' \
 	-e 's,[@]PACKAGE[@],$(PACKAGE),g' \
 	-e 's,[@]VERSION[@],$(VERSION),g'
 
-%: $(srcdir/%.in Makefile
+%: $(srcdir)/%.in Makefile
 	$(EDIT) < $(srcdir)/$*.in > $*
 	chmod +x $*
 

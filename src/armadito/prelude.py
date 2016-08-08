@@ -1,6 +1,6 @@
 import prelude
-import PreludeEasy
+from PreludeEasy import ClientEasy
 
-def ArmaditoPrelude(PreludeEasy.ClientEasy):
+def ArmaditoPrelude(ClientEasy):
     def __init__():
-        PreludeEasy.ClientEasy.__init__("armadito-prelude", 4, "armadito antivirus", "armadito antivirus class", "Teclib'")
+        ClientEasy.__init__("armadito-prelude", 4, "armadito antivirus", "armadito antivirus class", "Teclib'")
