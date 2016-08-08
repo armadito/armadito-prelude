@@ -1,7 +1,7 @@
 import requests
 import json
 
-class Client(object):
+class ApiClient(object):
     def __init__(self, port = 8888):
         self._port = port
         self._api_root = 'http://127.0.0.1:%d/api' % (self._port,)
@@ -26,4 +26,4 @@ class Client(object):
         self._token = j_token['token']
 
     def unregister(self):
-        call('/unregister')
+        self.call('/unregister')

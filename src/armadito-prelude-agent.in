@@ -3,13 +3,18 @@
 import sys
 sys.path.insert(1, '@pythondir@')
 
-from armadito.rest import Client
+from armadito.rest import ApiClient
+from armadito.prelude import PreludeClient
 
-c = Client()
+a = ApiClient()
+p = PreludeClient()
 
-c.register()
-c.call('/status')
+p.Start()
 
-print(str(c.call('/event')))
+a.register()
+a.call('/status')
 
+print(str(a.call('/event')))
+
+a.unregister()
 
