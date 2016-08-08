@@ -8,7 +8,7 @@ from armadito.rest import ApiClient
 from armadito.prelude import PreludeClient
 
 def usage():
-    print >> sys.stderr, 'Usage: armadito-prelude-agent OPTIONS'
+    print >> sys.stderr, 'Usage: armadito-prelude-agent OPTIONS ARGS'
     print >> sys.stderr, 'Launch Armadito Prelude agent.'
     print >> sys.stderr, ''
     print >> sys.stderr, 'Options:'
@@ -37,16 +37,16 @@ def main():
             assert False, "unhandled option"
     if action is None:
         usage()
-    do_action(action, verbose)
+    do_action(action, verbose, args)
 
 
-def do_action(action, verbose):
+def do_action(action, verbose, args):
     a = ApiClient(verbose = verbose)
     p = PreludeClient()
     p.Start()
     a.register()
     if action == 'scan':
-        a.call('/scan', {'path' : '/home/fdechelle/Bureau/MalwareStore/EICAR'})   ## must add path from args
+        a.call('/scan', {'path' : args[0]})
     elif action == 'status':
         a.call('/status')
     while True:
@@ -54,6 +54,12 @@ def do_action(action, verbose):
         print >> sys.stderr, 'got event: %s' % (str(j_ev),)
         if j_ev['event_type'] == 'DetectionEvent':
             p.send_scan_event(j_ev)
+        elif j_ev['event_type'] == 'DetectionEvent':
+            # do something
+            break
+        elif j_ev['event_type'] == 'OnDemandCompletedEvent':
+            # do something
+            break
     a.unregister()
 
 
