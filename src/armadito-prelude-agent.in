@@ -54,7 +54,7 @@ def do_action(action, verbose, args):
         print >> sys.stderr, 'got event: %s' % (str(j_ev),)
         if j_ev['event_type'] == 'DetectionEvent':
             p.send_scan_event(j_ev)
-        elif j_ev['event_type'] == 'DetectionEvent':
+        elif j_ev['event_type'] == 'OnDemandProgressEvent':
             # do something
             break
         elif j_ev['event_type'] == 'OnDemandCompletedEvent':
