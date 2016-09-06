@@ -4,6 +4,8 @@ bin_SCRIPTS = armadito-prelude-agent
 
 EDIT = sed -e 's,[@]pythondir[@],$(pythondir),g' \
 	-e 's,[@]pkgpythondir[@],$(pkgpythondir),g' \
+	-e 's,[@]libprelude_pythondir[@],$(libprelude_pythondir),g' \
+	-e 's,[@]libprelude_libdir[@],$(libprelude_libdir),g' \
 	-e 's,[@]PACKAGE[@],$(PACKAGE),g' \
 	-e 's,[@]VERSION[@],$(VERSION),g'
 
