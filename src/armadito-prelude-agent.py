@@ -62,10 +62,12 @@ def do_action(action, verbose, args):
         if j_ev['event_type'] == 'DetectionEvent':
             p.send_scan_event(j_ev)
         elif j_ev['event_type'] == 'OnDemandProgressEvent':
-            # do something
-            break
+            # do nothing for now
+            continue
         elif j_ev['event_type'] == 'OnDemandCompletedEvent':
-            # do something
+            break
+        elif j_ev['event_type'] == 'StatusEvent':
+            p.send_status_event(j_ev)
             break
     a.unregister()
     log('Armadito REST client unregistered')
