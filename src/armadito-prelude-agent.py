@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 import sys
+import logging
 import getopt
 
 import armadito.rest
@@ -14,12 +15,17 @@ def usage():
     print >> sys.stderr, ''
     sys.exit(1)
 
-def log(s):
-    print >> sys.stderr, 'Armadito Prelude: %s' % (s,)
+logger = None
 
 def main():
-    log('Armadito Prelude probe')
-    log('(C) Teclib\' 2016')
+    fmt = '%(asctime)s (process:%(process)s) %(levelname)s %(message)s'
+    logging.basicConfig(format=fmt)
+    #d = {'clientip': '192.168.0.1', 'user': 'fbloggs'}
+    global logger
+    logger = logging.getLogger('armadito prelude')
+    logger.setLevel(logging.DEBUG)
+    logger.info('Armadito Prelude probe (C) Teclib\' 2016')
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ha:v", ["help", "action="])
     except getopt.GetoptError as err:
@@ -40,25 +46,26 @@ def main():
             assert False, "unhandled option"
     if action is None:
         usage()
-    log('options parsed')
+    logger.info('options parsed')
     do_action(action, verbose, args)
 
 
 def do_action(action, verbose, args):
     a = armadito.rest.ApiClient(verbose = verbose)
     p = armadito.probe.Probe()
-    log('PreludeClient initialized')
+    global logger
+    logger.info('PreludeClient initialized')
     p.start()
-    log('PreludeClient started')
+    logger.info('PreludeClient started')
     a.register()
-    log('Armadito REST client registered')
+    logger.info('Armadito REST client registered')
     if action == 'scan':
         a.call('/scan', {'path' : args[0]})
     elif action == 'status':
         a.call('/status')
     while True:
         j_ev = a.call('/event')
-        log('got event: %s' % (str(j_ev),))
+        logger.debug('got event: %s', str(j_ev))
         if j_ev['event_type'] == 'DetectionEvent':
             p.send_scan_event(j_ev)
         elif j_ev['event_type'] == 'OnDemandProgressEvent':
@@ -70,7 +77,7 @@ def do_action(action, verbose, args):
             p.send_status_event(j_ev)
             break
     a.unregister()
-    log('Armadito REST client unregistered')
+    logger.info('Armadito REST client unregistered')
 
 
 if __name__ == "__main__":

@@ -1,11 +1,12 @@
 import prelude
 
+def _json_str(jobj, attr):
+    return jobj[attr].encode('ascii', 'replace')
+
+
 class Probe(prelude.ClientEasy):
     def __init__(self):
         prelude.ClientEasy.__init__(self, "armadito-prelude", 4, "armadito antivirus", "antivirus", "Teclib'")
-
-    def _json_str(jobj, attr):
-        return jobj[attr].encode('ascii', 'replace')
 
     def newIDMEF(self):
         idmef = prelude.IDMEF()
@@ -65,16 +66,31 @@ class Probe(prelude.ClientEasy):
         self.sendIDMEF(idmef)        
 
 
-    def send_scan_event(self, json_event):
+    def send_status_event(self, json_event):
         idmef = self.newIDMEF()
-        
+
+        global_status = json_event['global_status']
+
         # classification
-        idmef.set("alert.classification.text", "t detected")
+        if global_status == 'up-to-date':
+            idmef.set("alert.classification.text", "Antivirus is up-to-date")
+            idmef.set("alert.assessment.impact.severity", "info")
+        else:
+            idmef.set("alert.classification.text", "Antivirus must be updated")
+            idmef.set("alert.assessment.impact.severity", "high")
 
         # Assessment
-        idmef.set("alert.assessment.impact.severity", "info")
         idmef.set("alert.assessment.impact.type", "other")
         idmef.set("alert.assessment.impact.completion", "succeeded")
         idmef.set("alert.assessment.impact.description", "status for Armadito antivirus ")
+
+        # Additional Data
+        idmef.set("alert.additional_data(0).type", "string")
+        idmef.set("alert.additional_data(0).meaning", "Antivirus status")
+        idmef.set("alert.additional_data(0).data", _json_str(json_event, 'global_status'))
+
+        idmef.set("alert.additional_data(1).type", "integer")
+        idmef.set("alert.additional_data(1).meaning", "Last update timestamp")
+        idmef.set("alert.additional_data(1).data", json_event['global_update_timestamp'])
 
         self.sendIDMEF(idmef)        
