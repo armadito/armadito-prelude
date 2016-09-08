@@ -1,4 +1,5 @@
 import prelude
+import datetime
 
 def _json_str(jobj, attr):
     return jobj[attr].encode('ascii', 'replace')
@@ -89,8 +90,11 @@ class Probe(prelude.ClientEasy):
         idmef.set("alert.additional_data(0).meaning", "Antivirus status")
         idmef.set("alert.additional_data(0).data", _json_str(json_event, 'global_status'))
 
-        idmef.set("alert.additional_data(1).type", "integer")
-        idmef.set("alert.additional_data(1).meaning", "Last update timestamp")
-        idmef.set("alert.additional_data(1).data", json_event['global_update_timestamp'])
+        #idmef.set("alert.additional_data(1).type", "date-time")
+        idmef.set("alert.additional_data(1).type", "string")
+        idmef.set("alert.additional_data(1).meaning", "Last update date")
+        d = datetime.datetime.fromtimestamp(json_event['global_update_timestamp'])
+        u = d.strftime('%Y-%m-%d %H:%M:%S')
+        idmef.set("alert.additional_data(1).data", u)
 
         self.sendIDMEF(idmef)        
