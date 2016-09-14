@@ -3,7 +3,7 @@
 set -e
 
 tidyall -a
-perl Makefile.PL
+perl Makefile.PL PREFIX=~/prelude/install/
 make
-make test
+#make test
 sudo make install

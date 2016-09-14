@@ -1,0 +1,95 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib './lib';
+
+use English qw(-no_match_vars) ;
+use Getopt::Long;
+use Pod::Usage;
+use UNIVERSAL::require;
+use Armadito::Prelude;
+
+my $options = {};
+
+pod2usage(-verbose => 0, -exitstatus => 0) unless $ARGV[0];
+
+GetOptions(
+    $options,
+	'input|i=s',
+	'setup',
+	'help|h',
+	'version|v',
+) or pod2usage(-verbose => 0);
+
+pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
+
+if ($options->{version}) {
+    print "armadito-prelude $Armadito::Prelude::VERSION\n";
+    exit 0;
+}
+
+my %setup = (
+    confdir => './etc',
+    datadir => './share',
+    libdir  => './lib',
+    vardir  => './var',
+);
+
+if ($options->{setup}) {
+    foreach my $key (keys %setup) {
+        print "$key: $setup{$key}\n";
+    }
+    exit 0;
+}
+
+my $prelude = Armadito::Prelude->new(%setup);
+my $config = {};
+
+eval{
+	$prelude->init(options => $options);
+        $prelude->run();
+};
+
+if ($EVAL_ERROR) {
+    print STDERR "Execution failure:\n";
+    print STDERR $EVAL_ERROR;
+    exit(1);
+}
+
+exit(0);
+__END__
+
+=head1 NAME
+
+armadito-prelude - command line interface script for Armadito Prelude.
+
+=head1 SYNOPSIS
+
+armadito-prelude --input <alertsdir>
+
+  Options:
+    --help                 this menu
+    --input alertsdir      Armadito alerts directory
+    --setup 		   Show setup paths
+
+=head1 EXAMPLES
+
+	% armadito-prelude --input /var/spool/armadito
+	% armadito-prelude -i $PREFIX/install/var/spool/armadito
+
+=head1 DESCRIPTION
+
+F<armadito-prelude> is the command line interface for Armadito Prelude.
+
+=head1 OPTIONS
+
+=head2 Main options
+
+=over
+
+=item B<-i>, B<--input>=I<ALERTSDIR>
+
+Read alerts in given directory.
+
+=back
