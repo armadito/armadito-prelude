@@ -1,0 +1,107 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib './lib';
+
+use English qw(-no_match_vars) ;
+use Getopt::Long;
+use Pod::Usage;
+use UNIVERSAL::require;
+use Armadito::Prelude;
+
+my $options = {};
+
+pod2usage(-verbose => 0, -exitstatus => 0) unless $ARGV[0];
+
+GetOptions(
+    $options,
+	'server|s=s',
+	'input|i=s',
+	'setup',
+	'help|h',
+	'version|v',
+) or pod2usage(-verbose => 0);
+
+pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
+
+if ($options->{version}) {
+    print "armadito-prelude $Armadito::Prelude::VERSION\n";
+    exit 0;
+}
+
+my %setup = (
+    confdir => './etc',
+    datadir => './share',
+    libdir  => './lib',
+    vardir  => './var',
+);
+
+if ($options->{setup}) {
+    foreach my $key (keys %setup) {
+        print "$key: $setup{$key}\n";
+    }
+    exit 0;
+}
+
+my $prelude = Armadito::Prelude->new(%setup);
+my $config = {};
+
+eval{
+	$prelude->init(options => $options);
+        $prelude->run();
+};
+
+if ($EVAL_ERROR) {
+    print STDERR "Execution failure:\n";
+    print STDERR $EVAL_ERROR;
+    exit(1);
+}
+
+exit(0);
+__END__
+
+=head1 NAME
+
+armadito-prelude - command line interface script for Armadito Prelude.
+
+=head1 SYNOPSIS
+
+armadito-prelude --server <server> --input <alertsdir>
+
+  Options:
+    --help                 this menu
+    --input alertsdir      Armadito alerts directory
+    --server server        Prelude SIEM server URL
+    --setup 		   Show setup paths
+
+=head1 EXAMPLES
+
+	% armadito-prelude --input /var/spool/armadito --server http://192.168.56.101
+	% armadito-prelude --i $PREFIX/install/var/spool/armadito -s http://192.168.56.101
+
+=head1 DESCRIPTION
+
+F<armadito-prelude> is the command line interface for Armadito Prelude.
+
+=head1 OPTIONS
+
+Some options are available in a I<short> form and a I<long> form.  For
+example, the two lines below are all equivalent:
+
+    % armadito-prelude -s localhost
+    % armadito-prelude --server localhost
+
+=head2 Main options
+
+=over
+
+=item B<-s>, B<--server>=I<URI>
+
+Send alerts to given Prelude SIEM server URL.
+
+=item B<-i>, B<--input>=I<ALERTSDIR>
+
+Read alerts in given directory.
+
+=back
