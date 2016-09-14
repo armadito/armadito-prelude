@@ -14,7 +14,10 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
- // TODO
+UNIVERSAL::require inc::Module::Install
+
+Ubuntu :
+ libuniversal-require-perl libmodule-install-perl
 
 COPYRIGHT
 
