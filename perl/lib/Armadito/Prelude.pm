@@ -3,26 +3,30 @@ package Armadito::Prelude;
 use 5.008000;
 use strict;
 use warnings;
+use English qw(-no_match_vars);
+use UNIVERSAL::require;
 
 require Exporter;
 
-our @ISA = qw(Exporter);
+our $VERSION = "0.0.2";
 
-our %EXPORT_TAGS = (
-    'all' => [
-        qw(
+sub new {
+	my ( $class, %params ) = @_;
 
-          )
-    ]
-);
+	my $self = {
+		status  => 'unknown',
+		confdir => $params{confdir},
+		datadir => $params{datadir},
+		libdir  => $params{libdir},
+		vardir  => $params{vardir},
+		sigterm => $params{sigterm},
+		targets => [],
+		tasks   => []
+	};
+	bless $self, $class;
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
-our @EXPORT = qw(
-
-);
-
-our $VERSION = '0.0.2';
+	return $self;
+}
 
 1;
 __END__
