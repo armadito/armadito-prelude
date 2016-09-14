@@ -1,0 +1,9 @@
+Revision history for Perl extension Armadito::Prelude.
+
+0.0.2  14/09/2016
+        - init basic perl module stuff
+
+0.0.1  14/09/2016
+	- original version; created by h2xs 1.23 with options
+		-XAn Armadito::Prelude -b 5.8.0
+
