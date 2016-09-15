@@ -20,6 +20,7 @@ GetOptions(
 	'setup',
 	'max=i',
 	'help|h',
+	'no-rm',
 	'version|v',
 ) or pod2usage(-verbose => 0);
 
@@ -73,12 +74,13 @@ armadito-prelude --input <alertsdir>
     --help                 this menu
     --input alertsdir      Armadito alerts directory
     --max   max            Maximum alerts processed (>0)
+    --no-rm 		   Do not remove alerts after processing (not by default).
     --setup 		   Show setup paths
 
 =head1 EXAMPLES
 
 	% armadito-prelude --input /var/spool/armadito
-	% armadito-prelude -i $PREFIX/install/var/spool/armadito
+	% armadito-prelude -i $PREFIX/install/var/spool/armadito --max 10
 
 =head1 DESCRIPTION
 
@@ -97,5 +99,10 @@ Read alerts in given directory.
 =item B<--max>=I<MAX>
 
 Process alerts up to given maximum (>0). 
+
+=item B<--no-rm>
+
+Do not remove alerts after processing.
+By using that option, be aware that these alerts will be reprocessed if they are still in alerts directory.
 
 =back

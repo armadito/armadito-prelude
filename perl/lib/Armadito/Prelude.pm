@@ -38,6 +38,7 @@ sub init {
 	$self->{prelude_client} = new Armadito::Prelude::Client( name => "armadito-prelude" );
 	$self->{inputdir}       = $params{options}->{input};
 	$self->{maxalerts}      = $params{options}->{max} ? $params{options}->{max} : -1;
+	$self->{"no-rm"} = defined( $params{options}->{"no-rm"} ) ? 1 : 0;
 
 	return $self;
 }
@@ -59,6 +60,8 @@ sub _processAlert {
 		warn $EVAL_ERROR;
 		return 1;
 	}
+
+	unlink $params{filepath} if ( !$self->{"no-rm"} );
 	return 0;
 }
 
@@ -93,6 +96,8 @@ Armadito::Prelude - Armadito-Prelude communication client in Perl language.
 =head1 DESCRIPTION
 
 Armadito-Prelude is a tool essentially developed to send Armadito Antivirus' virus alerts to Prelude SIEM.
+
+Note : If an alert is successfully processed, it is automatically removed from disk. You can modify this behavior by using option --no-rm.
 
 =head1 METHODS
 
