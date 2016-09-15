@@ -8,8 +8,11 @@ use UNIVERSAL::require;
 
 require Exporter;
 
+use Armadito::Prelude::IDMEF;
 use Armadito::Prelude::Client;
+use Armadito::Prelude::XML::Parser;
 use Armadito::Prelude::Tools::Dir qw(readDirectory);
+use Armadito::Prelude::Tools::File qw(readFile);
 
 our $VERSION = "0.0.2";
 
@@ -38,35 +41,34 @@ sub init {
 	return $self;
 }
 
+sub _processAlert {
+
+	my ( $self, %params ) = @_;
+
+	my $filecontent = readFile( filepath => $params{filepath} );
+	my $parser = new Armadito::Prelude::XML::Parser( text => $filecontent );
+	$parser->run();
+
+	my $idmef = new Armadito::Prelude::IDMEF();
+
+	eval { $idmef->setFromXML( xml => $parser->{xmlparsed} ); };
+	warn $EVAL_ERROR if $EVAL_ERROR;
+
+	$self->{prelude_client}->{client}->sendIDMEF( $idmef->{obj} );
+
+	return $self;
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self->{prelude_client}->start();
 
 	my @alerts = readDirectory( dirpath => $self->{inputdir} );
-	foreach my $filepath (@alerts) {
-		print $self->{inputdir} . "/" . $filepath . "\n";
+
+	foreach my $alert (@alerts) {
+		$self->_processAlert( filepath => $self->{inputdir} . "/" . $alert );
 	}
-
-	# Create an IDMEF message
-	my $idmef = new Prelude::IDMEF();
-
-	# Classification
-	$idmef->set( "alert.classification.text",               "Perl Example" );
-	$idmef->set( "alert.source(0).node.address(0).address", "10.0.0.1" );
-	$idmef->set( "alert.target(0).node.address(0).address", "10.0.0.2" );
-	$idmef->set( "alert.target(1).node.address(0).address", "10.0.0.3" );
-
-	# Assessment
-	$idmef->set( "alert.assessment.impact.severity",   "low" );
-	$idmef->set( "alert.assessment.impact.completion", "failed" );
-	$idmef->set( "alert.assessment.impact.type",       "recon" );
-
-	# Additional Data
-	$idmef->set( "alert.additional_data(0).data", "something" );
-
-	# Send the generated message
-	$self->{prelude_client}->{client}->sendIDMEF($idmef);
 
 	return $self;
 }
