@@ -7,6 +7,10 @@ Firstly, you need to build libprelude and set up a prelude SIEM server.
 Note that Armadito Prelude in perl needs both having libprelude.so in LD_LIBRARY_PATH and lib prelude Perl libs in @INC (Prelude.so and Prelude.pm).
 Also at execution, these requirements must be met, including for 'make test'. You can see and example in run.sh.
 
+Prelude SIEM registration example :
+
+~/prelude/install/bin/prelude-admin register "armadito-prelude" "idmef:w" 192.168.56.101 --uid 1000 --gid 1000
+
 USAGE
 
 Once requirements are met, you can use it as you wish.
