@@ -22,7 +22,8 @@ test_requires 'Test::More'          => '0';
 test_requires 'Test::Perl::Critic'  => '0';
 test_requires 'Test::Code::TidyAll' => '0';
 
-install_script 'bin/armadito-prelude' if ( $OSNAME ne "MSWin32" );
+install_script 'bin/armadito-prelude'       if ( $OSNAME ne "MSWin32" );
+install_script 'bin/armadito-prelude-agent' if ( $OSNAME ne "MSWin32" );
 
 resources
 	homepage   => "http://www.teclib-edition.com/en/teclib-products/armadito-antivirus/",
