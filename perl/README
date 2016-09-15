@@ -1,11 +1,29 @@
 Armadito-Prelude
 ================
 
+PREREQUISITES
+
+Firstly, you need to build libprelude and set up a prelude SIEM server.
+Note that Armadito Prelude in perl needs both having libprelude.so in LD_LIBRARY_PATH and lib prelude Perl libs in @INC (Prelude.so and Prelude.pm).
+Also at execution, these requirements must be met, including for 'make test'. You can see and example in run.sh.
+
+USAGE
+
+Once requirements are met, you can use it as you wish.
+Using crontab might be one of the best solution if you want to configure the frequency of alerts uploads to prelude SIEM.
+Also, setting a maximum alerts count by execution allows you to control the flow of alerts processed (--max option).
+
+Example :
+
+Send up to 10 alerts from Armadito Antivirus on-access protection each minute :
+
+* * * * * ~/prelude/install/bin/armadito-prelude -i ~/armadito/git/armadito-av/build/linux/out/install/armadito-av/var/spool/armadito/ --max 10
+
 INSTALLATION
 
 To install this module type the following:
 
-   perl Makefile.PL
+   perl Makefile.PL INSTALL_BASE=~/install_path_of_libprelude
    make
    make test
    make install
