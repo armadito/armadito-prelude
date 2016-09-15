@@ -128,6 +128,9 @@ sub constants {
 		$variables{$name} = $self->{ARGS}->{$name} if $self->{ARGS}->{$name};
 	}
 
+	# INSTALL_BASE is set to prefix if specified
+	$variables{PREFIX} = $self->{ARGS}->{"INSTALL_BASE"} if $self->{ARGS}->{"INSTALL_BASE"};
+
 	# get all standard MM variables definitions, and override them if needed
 	my @code = split( /\n/, $self->SUPER::constants(@_) );
 	foreach my $line (@code) {
