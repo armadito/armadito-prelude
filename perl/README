@@ -14,10 +14,10 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-UNIVERSAL::require inc::Module::Install
+UNIVERSAL::require inc::Module::Install XML::Bare
 
 Ubuntu :
- libuniversal-require-perl libmodule-install-perl
+ libuniversal-require-perl libmodule-install-perl libxml-bare-perl
 
 COPYRIGHT
 
