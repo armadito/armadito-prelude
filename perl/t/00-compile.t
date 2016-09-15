@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More;
 use Test::Compile;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
