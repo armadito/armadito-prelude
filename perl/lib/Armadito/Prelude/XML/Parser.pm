@@ -13,23 +13,22 @@ sub new {
 
 	warn "Empty xml virus alert content." if !$params{text};
 
-	my $self = { 
-	 parser => new XML::Bare(text => $params{text}),
-	 xmlparsed => ""
+	my $self = {
+		parser    => new XML::Bare( text => $params{text} ),
+		xmlparsed => ""
 	};
 
 	bless $self, $class;
 	return $self;
 }
 
-
-sub run {	
+sub run {
 	my ( $self, %params ) = @_;
 
-	eval {$self->{xmlparsed} = $self->{parser}->parse()};
+	eval { $self->{xmlparsed} = $self->{parser}->parse() };
 	if ($@) {
-	  warn "Error when parsing XML alert ".$@;
-	}	
+		warn "Error when parsing XML alert " . $@;
+	}
 
 	return $self;
 }

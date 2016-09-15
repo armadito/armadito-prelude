@@ -18,26 +18,26 @@ our @EXPORT_OK = qw(
 sub makeDirectory {
 	my (%params) = @_;
 
-	unless( -d $params{dirpath} ){
-	 make_path($params{dirpath}) || warn "Can't make path $params{dirpath}";
-	}	
+	unless ( -d $params{dirpath} ) {
+		make_path( $params{dirpath} ) || warn "Can't make path $params{dirpath}";
+	}
 }
 
 sub readDirectory {
 	my (%params) = @_;
 	my @files = ();
 
-	if(opendir(my $dh, $params{dirpath})){
-		while(readdir $dh) {
-			if (($_ ne ".")&&($_ ne "..")){
-				if (-f $params{dirpath}.$_){
-					push (@files, $_);
+	if ( opendir( my $dh, $params{dirpath} ) ) {
+		while ( readdir $dh ) {
+			if ( ( $_ ne "." ) && ( $_ ne ".." ) ) {
+				if ( -f $params{dirpath} . $_ ) {
+					push( @files, $_ );
 				}
 			}
 		}
 		closedir $dh;
 	}
-	else{
+	else {
 		warn "unable to readdir $params{dirpath}.";
 		return 0;
 	}

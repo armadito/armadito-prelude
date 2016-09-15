@@ -16,9 +16,9 @@ our @EXPORT_OK = qw(
 
 sub readFile {
 	my (%params) = @_;
-	my $fh;	
+	my $fh;
 
-	if(!open($fh, "<".$params{filepath})){
+	if ( !open( $fh, "<" . $params{filepath} ) ) {
 		warn "Error io $params{filepath} : $!";
 		return "";
 	}
@@ -27,17 +27,17 @@ sub readFile {
 }
 
 sub writeFile {
-   my (%params) = @_;
+	my (%params) = @_;
 
-   if(!open(FIC, $params{mode} , $params{filepath})){
-	 warn "Error io $params{filepath} : $!";
-	 return 0;
-   }	
+	if ( !open( FIC, $params{mode}, $params{filepath} ) ) {
+		warn "Error io $params{filepath} : $!";
+		return 0;
+	}
 
-   binmode FIC;
-   print FIC $params{content};
-   close FIC;
-   return 1;
+	binmode FIC;
+	print FIC $params{content};
+	close FIC;
+	return 1;
 }
 1;
 __END__
