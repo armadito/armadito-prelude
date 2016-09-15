@@ -42,21 +42,23 @@ sub init {
 }
 
 sub _processAlert {
-
 	my ( $self, %params ) = @_;
 
 	my $filecontent = readFile( filepath => $params{filepath} );
 	my $parser = new Armadito::Prelude::XML::Parser( text => $filecontent );
 	$parser->run();
 
-	my $idmef = new Armadito::Prelude::IDMEF();
+	eval {
+		my $idmef = new Armadito::Prelude::IDMEF();
+		$idmef->setFromXML( xml => $parser->{xmlparsed} );
+		$self->{prelude_client}->{client}->sendIDMEF( $idmef->{obj} );
+	};
 
-	eval { $idmef->setFromXML( xml => $parser->{xmlparsed} ); };
-	warn $EVAL_ERROR if $EVAL_ERROR;
-
-	$self->{prelude_client}->{client}->sendIDMEF( $idmef->{obj} );
-
-	return $self;
+	if ($EVAL_ERROR) {
+		warn $EVAL_ERROR;
+		return 1;
+	}
+	return 0;
 }
 
 sub run {
@@ -66,9 +68,15 @@ sub run {
 
 	my @alerts = readDirectory( dirpath => $self->{inputdir} );
 
+	my $i      = 0;
+	my $errors = 0;
+
 	foreach my $alert (@alerts) {
-		$self->_processAlert( filepath => $self->{inputdir} . "/" . $alert );
+		$errors += $self->_processAlert( filepath => $self->{inputdir} . "/" . $alert );
+		$i++;
 	}
+
+	print "$i alerts processed, $errors errors.\n";
 
 	return $self;
 }
