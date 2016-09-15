@@ -18,6 +18,7 @@ GetOptions(
     $options,
 	'input|i=s',
 	'setup',
+	'max=i',
 	'help|h',
 	'version|v',
 ) or pod2usage(-verbose => 0);
@@ -71,6 +72,7 @@ armadito-prelude --input <alertsdir>
   Options:
     --help                 this menu
     --input alertsdir      Armadito alerts directory
+    --max   max            Maximum alerts processed (>0)
     --setup 		   Show setup paths
 
 =head1 EXAMPLES
@@ -91,5 +93,9 @@ F<armadito-prelude> is the command line interface for Armadito Prelude.
 =item B<-i>, B<--input>=I<ALERTSDIR>
 
 Read alerts in given directory.
+
+=item B<--max>=I<MAX>
+
+Process alerts up to given maximum (>0). 
 
 =back

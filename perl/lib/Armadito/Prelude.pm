@@ -36,7 +36,8 @@ sub init {
 	my ( $self, %params ) = @_;
 
 	$self->{prelude_client} = new Armadito::Prelude::Client( name => "armadito-prelude" );
-	$self->{inputdir} = $params{options}->{input};
+	$self->{inputdir}       = $params{options}->{input};
+	$self->{maxalerts}      = $params{options}->{max} ? $params{options}->{max} : -1;
 
 	return $self;
 }
@@ -74,6 +75,7 @@ sub run {
 	foreach my $alert (@alerts) {
 		$errors += $self->_processAlert( filepath => $self->{inputdir} . "/" . $alert );
 		$i++;
+		last if ( $i - $errors >= $self->{maxalerts} && $self->{maxalerts} >= 0 );
 	}
 
 	print "$i alerts processed, $errors errors.\n";
