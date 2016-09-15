@@ -1,21 +1,12 @@
-# Before 'make install' is performed this script should be runnable with
-# 'make test'. After 'make install' it should work as 'perl Armadito-Prelude.t'
-
-#########################
-
-# change 'tests => 1' to 'tests => last_test_to_print';
-
 use strict;
 use warnings;
 
 use Test::More tests => 1;
 
-BEGIN {
+SKIP: {
+	eval 'use Prelude';
+	skip( 'compile tests need Prelude library', 1 )
+		if $@;
+
 	use_ok('Armadito::Prelude');
 }
-
-#########################
-
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
-
