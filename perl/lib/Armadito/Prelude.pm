@@ -5,9 +5,10 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
-use Prelude;
 
 require Exporter;
+
+use Armadito::Prelude::Client;
 
 our $VERSION = "0.0.2";
 
@@ -32,14 +33,15 @@ sub new {
 sub init {
 	my ( $self, %params ) = @_;
 
+	$self->{prelude_client} = new Armadito::Prelude::Client( name => "armadito-prelude" );
+
 	return $self;
 }
 
 sub run {
+	my ( $self, %params ) = @_;
 
-	# Create a new Prelude client.
-	my $client = new Prelude::ClientEasy("armadito-prelude");
-	$client->start();
+	$self->{prelude_client}->start();
 
 	# Create an IDMEF message
 	my $idmef = new Prelude::IDMEF();
@@ -59,10 +61,9 @@ sub run {
 	$idmef->set( "alert.additional_data(0).data", "something" );
 
 	# Send the generated message
-	$client->sendIDMEF($idmef);
+	$self->{prelude_client}->{client}->sendIDMEF($idmef);
 
-	print "Prelude OK!";
-	return;
+	return $self;
 }
 
 1;
