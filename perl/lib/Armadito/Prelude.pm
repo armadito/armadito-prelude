@@ -9,6 +9,7 @@ use UNIVERSAL::require;
 require Exporter;
 
 use Armadito::Prelude::Client;
+use Armadito::Prelude::Tools::Dir qw(readDirectory);
 
 our $VERSION = "0.0.2";
 
@@ -32,6 +33,7 @@ sub init {
 	my ( $self, %params ) = @_;
 
 	$self->{prelude_client} = new Armadito::Prelude::Client( name => "armadito-prelude" );
+	$self->{inputdir} = $params{options}->{input};
 
 	return $self;
 }
@@ -40,6 +42,11 @@ sub run {
 	my ( $self, %params ) = @_;
 
 	$self->{prelude_client}->start();
+
+	my @alerts = readDirectory( dirpath => $self->{inputdir} );
+	foreach my $filepath (@alerts) {
+		print $self->{inputdir} . "/" . $filepath . "\n";
+	}
 
 	# Create an IDMEF message
 	my $idmef = new Prelude::IDMEF();
