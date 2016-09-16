@@ -2,7 +2,8 @@ language: perl
 sudo: required
 dist: trusty
 
-script: perl/build.sh
+before_script:
+  - cd perl
 
 before_install:
   - cpanm --notest Perl::Tidy
