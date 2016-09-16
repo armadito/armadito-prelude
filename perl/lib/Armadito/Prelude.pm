@@ -13,6 +13,7 @@ use Armadito::Prelude::Client;
 use Armadito::Prelude::XML::Parser;
 use Armadito::Prelude::Tools::Dir qw(readDirectory);
 use Armadito::Prelude::Tools::File qw(readFile);
+use Armadito::Prelude::HTTP::Client::ArmaditoAV;
 
 our $VERSION      = "0.0.3";
 our $AGENT_STRING = "Armadito-Prelude_v" . $VERSION;
@@ -84,6 +85,25 @@ sub _processAlertDir {
 	return $self;
 }
 
+sub _getAVStatus {
+	my ( $self, %params ) = @_;
+
+	$self->{av_client} = Armadito::Prelude::HTTP::Client::ArmaditoAV->new( prelude_client => $self->{prelude_client} );
+	$self->{av_client}->register();
+
+	my $response = $self->{av_client}->sendRequest(
+		"url"  => $self->{av_client}->{server_url} . "/api/status",
+		method => "GET"
+	);
+
+	die "Unable to get AV status with ArmaditoAV api."
+		if ( !$response->is_success() );
+
+	$self->{av_client}->pollEvents();
+	$self->{av_client}->unregister();
+	return $self;
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
@@ -92,8 +112,8 @@ sub run {
 	if ( $self->{inputdir} ne "" ) {
 		$self->_processAlertDir();
 	}
-	else {
-		print "Action = " . $self->{action} . "\n";
+	elsif ( $self->{action} eq "status" ) {
+		$self->_getAVStatus();
 	}
 
 	return $self;

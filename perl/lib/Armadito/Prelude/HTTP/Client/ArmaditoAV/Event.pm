@@ -7,10 +7,10 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = {
-		"event_type"  => $params{jobj}->{"event_type"},
-		"end_polling" => 0,
-		taskobj       => $params{taskobj},
-		jobj          => $params{jobj}
+		"event_type"   => $params{jobj}->{"event_type"},
+		"end_polling"  => 0,
+		prelude_client => $params{prelude_client},
+		jobj           => $params{jobj}
 	};
 
 	bless $self, $class;

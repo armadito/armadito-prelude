@@ -4,44 +4,35 @@ use strict;
 use warnings;
 use base 'Armadito::Prelude::HTTP::Client::ArmaditoAV::Event';
 use JSON;
+use Data::Dumper;
+use Armadito::Prelude::IDMEF qw( setAnalyzer setClassification setTarget setAssessment setAdditionalData );
 
 sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = $class->SUPER::new(%params);
 
+	$self->{idmef} = Armadito::Prelude::IDMEF->new();
+
 	return $self;
 }
 
-sub _sendToGLPI {
+sub _sendToPrelude {
 	my ( $self, $message ) = @_;
 
-	my $response = $self->{taskobj}->{glpi_client}->sendRequest(
-		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/states",
-		message => $message,
-		method  => "POST"
-	);
+	$self->{prelude_client}->{client}->sendIDMEF( $self->{idmef}->{obj} );
 
-	if ( $response->is_success() ) {
-		$self->{taskobj}->_handleResponse($response);
-		$self->{taskobj}->{logger}->info("Send ArmaditoAV State successful...");
-	}
-	else {
-		$self->{taskobj}->_handleError($response);
-		$self->{taskobj}->{logger}->info("Send ArmaditoAV State failed...");
-	}
-
-	return;
+	return $self;
 }
 
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self->{taskobj}->{jobj}->{task}->{obj} = $self->{jobj};
-	my $json_text = to_json( $self->{taskobj}->{jobj} );
-	print "JSON formatted str : \n" . $json_text . "\n";
+	print Dumper( $self->{jobj} );
 
-	$self->_sendToGLPI($json_text);
+	$self->{idmef}->setAnalyzer();
+
+	# $self->_sendToPrelude();
 	$self->{end_polling} = 1;
 
 	return $self;

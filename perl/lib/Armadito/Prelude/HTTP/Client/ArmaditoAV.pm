@@ -26,8 +26,8 @@ sub new {
 	my ( $class, %params ) = @_;
 	my $self = $class->SUPER::new(%params);
 
-	$self->{taskobj}    = $params{taskobj};
-	$self->{server_url} = "http://localhost:8888";
+	$self->{prelude_client} = $params{prelude_client};
+	$self->{server_url}     = "http://localhost:8888";
 
 	return $self;
 }
@@ -48,7 +48,7 @@ sub sendRequest {
 	$self->{logger}->debug2($url) if $self->{logger};
 
 	my $headers = HTTP::Headers->new(
-		'User-Agent' => 'armadito-agent',
+		'User-Agent' => 'armadito-prelude',
 		'Referer'    => $url
 	);
 
@@ -157,9 +157,9 @@ sub _handleEvent {
 		return 0;
 	}
 
-	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::Event::$event_jobj->{'event_type'}";
+	my $class = "Armadito::Prelude::HTTP::Client::ArmaditoAV::Event::$event_jobj->{'event_type'}";
 	$class->require();
-	my $event = $class->new( jobj => $event_jobj, taskobj => $self->{taskobj} );
+	my $event = $class->new( jobj => $event_jobj, prelude_client => $self->{prelude_client} );
 	$event->run();
 
 	return $event->{"end_polling"};
