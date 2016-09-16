@@ -1,14 +1,14 @@
 use strict;
 use warnings;
-use English qw(-no_match_vars);
-use UNIVERSAL::require;
+
 use Test::More tests => 1;
+use Module::Runtime qw(use_module);
 
 SKIP: {
-	eval { Prelude->require(); };
+	my $prelude = use_module("Prelude");
 
 	skip( 'compile tests need Prelude library', 1 )
-		if $@;
+		if !$prelude;
 
 	use_ok('Armadito::Prelude');
 }

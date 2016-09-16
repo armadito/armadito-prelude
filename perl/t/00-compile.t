@@ -4,12 +4,13 @@ use Test::More;
 use Test::Compile;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
+use Module::Runtime qw(use_module);
 
 SKIP: {
-	eval { Prelude->require(); };
+	my $prelude = use_module("Prelude");
 
 	skip( 'compile tests need Prelude library', 1 )
-		if $@;
+		if !$prelude;
 
 	my @scripts = qw(mod2html podtree2html pods2html perl2html);
 	my $test    = Test::Compile->new();
