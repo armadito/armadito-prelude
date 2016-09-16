@@ -37,3 +37,4 @@ debian
 .perlcriticrc
 ^do_all.sh
 ^run.sh
+^build.sh
