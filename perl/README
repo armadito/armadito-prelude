@@ -5,7 +5,7 @@ PREREQUISITES
 
 Firstly, you need to build libprelude and set up a prelude SIEM server.
 Note that Armadito Prelude in perl needs both having libprelude.so in LD_LIBRARY_PATH and lib prelude Perl libs in @INC (Prelude.so and Prelude.pm).
-Also at execution, these requirements must be met, including for 'make test'. You can see and example in run.sh.
+Also at execution, these requirements must be met, including for a complete 'make test'. You can see and example in run.sh.
 
 Prelude SIEM registration example :
 
