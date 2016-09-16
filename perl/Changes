@@ -1,5 +1,11 @@
 Revision history for Perl extension Armadito::Prelude.
 
+0.0.3  16/09/2016
+        - Send up Armadito AV alerts from a given directory
+        - perltidy all
+        - perl critic coverage (sev:4)
+	- travis-ci support
+
 0.0.2  14/09/2016
         - init basic perl module stuff
 	- Add GPLv3 license
