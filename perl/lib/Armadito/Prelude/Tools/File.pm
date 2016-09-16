@@ -18,7 +18,7 @@ sub readFile {
 	my (%params) = @_;
 	my $fh;
 
-	if ( !open( $fh, "<" . $params{filepath} ) ) {
+	if ( !open( $fh, "<", $params{filepath} ) ) {
 		warn "Error io $params{filepath} : $!";
 		return "";
 	}
@@ -28,15 +28,16 @@ sub readFile {
 
 sub writeFile {
 	my (%params) = @_;
+	my $fh;
 
-	if ( !open( FIC, $params{mode}, $params{filepath} ) ) {
+	if ( !open( $fh, $params{mode}, $params{filepath} ) ) {
 		warn "Error io $params{filepath} : $!";
 		return 0;
 	}
 
-	binmode FIC;
-	print FIC $params{content};
-	close FIC;
+	binmode $fh;
+	print $fh $params{content};
+	close $fh;
 	return 1;
 }
 1;
