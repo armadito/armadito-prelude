@@ -6,7 +6,7 @@ use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
 SKIP: {
-	eval { use Prelude; };
+	eval { Prelude->require(); };
 
 	skip( 'compile tests need Prelude library', 1 )
 		if $@;
