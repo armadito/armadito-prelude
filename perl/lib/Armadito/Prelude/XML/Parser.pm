@@ -13,7 +13,7 @@ sub new {
 
 	warn "Empty xml virus alert content." if !$params{text};
 
-	my $xmlparser = new XML::Bare( text => $params{text} );
+	my $xmlparser = XML::Bare->new( text => $params{text} );
 
 	my $self = {
 		parser    => $xmlparser,

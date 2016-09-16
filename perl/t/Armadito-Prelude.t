@@ -12,3 +12,5 @@ SKIP: {
 
 	use_ok('Armadito::Prelude');
 }
+
+1;

@@ -34,7 +34,7 @@ sub new {
 	# Source
 	#$self->{obj}->set("alert.source(0).node.address(0).address", "127.0.0.1");
 
-	$self->{obj} = new Prelude::IDMEF();
+	$self->{obj} = Prelude::IDMEF->new();
 
 	# analyzer
 	$self->{obj}->set( "alert.analyzer(0).name",         "Armadito antivirus" );

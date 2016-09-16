@@ -35,7 +35,7 @@ sub new {
 sub init {
 	my ( $self, %params ) = @_;
 
-	$self->{prelude_client} = new Armadito::Prelude::Client( name => "armadito-prelude" );
+	$self->{prelude_client} = Armadito::Prelude::Client->new( name => "armadito-prelude" );
 	$self->{inputdir}       = $params{options}->{input};
 	$self->{maxalerts}      = $params{options}->{max} ? $params{options}->{max} : -1;
 	$self->{"no-rm"} = defined( $params{options}->{"no-rm"} ) ? 1 : 0;
@@ -47,11 +47,11 @@ sub _processAlert {
 	my ( $self, %params ) = @_;
 
 	my $filecontent = readFile( filepath => $params{filepath} );
-	my $parser = new Armadito::Prelude::XML::Parser( text => $filecontent );
+	my $parser = Armadito::Prelude::XML::Parser->new( text => $filecontent );
 	$parser->run();
 
 	eval {
-		my $idmef = new Armadito::Prelude::IDMEF();
+		my $idmef = Armadito::Prelude::IDMEF->new();
 		$idmef->setFromXML( xml => $parser->{xmlparsed} );
 		$self->{prelude_client}->{client}->sendIDMEF( $idmef->{obj} );
 	};

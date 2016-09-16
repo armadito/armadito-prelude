@@ -1,6 +1,6 @@
 # please alpha sort config items as you add them
 
-severity = 5
+severity = 4
 theme = core
 verbose = %f: [%p] %m at line %l, column %c.\n
 
