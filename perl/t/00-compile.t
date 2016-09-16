@@ -9,7 +9,7 @@ use Module::Runtime qw(use_module);
 SKIP: {
 	eval { use_module("Prelude"); };
 
-	skip( 'compile tests need Prelude library', 1 )
+	plan skip_all => 'Compile tests need Prelude library'
 		if $@;
 
 	my @scripts = qw(mod2html podtree2html pods2html perl2html);
