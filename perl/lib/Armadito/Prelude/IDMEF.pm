@@ -8,39 +8,16 @@ use Prelude;
 
 require Exporter;
 
-#from https://www.prelude-siem.org/projects/prelude-lml-rules/repository/revisions/master/entry/ruleset/clamav.rules
-# classification.text=Virus found: $2; \
-# id=3200; \
-# revision=2; \
-# analyzer(0).name=Clam Antivirus; \
-# analyzer(0).manufacturer=www.clamav.net; \
-# analyzer(0).class=Antivirus; \
-# assessment.impact.severity=high; \
-# assessment.impact.type=file; \
-# assessment.impact.completion=succeeded; \
-# assessment.impact.description=A virus has been identified by ClamAV; \
-# additional_data(0).type=string; \
-# additional_data(0).meaning=File location; \
-# additional_data(0).data=$1; \
-# additional_data(1).type=string; \
-# additional_data(1).meaning=Malware name; \
-# additional_data(1).data=$1; \
-
 sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = {};
-
-	# Source
-	#$self->{obj}->set("alert.source(0).node.address(0).address", "127.0.0.1");
-
 	$self->{obj} = Prelude::IDMEF->new();
 
 	bless $self, $class;
 	return $self;
 }
 
-# See RFC 4765.
 sub setFromXML {
 	my ( $self, %params ) = @_;
 
@@ -123,3 +100,26 @@ sub _setAdditionalData {
 }
 1;
 
+__END__
+
+=head1 NAME
+
+Armadito::Prelude::IDMEF - Class dealing with IDMEF format for libprelude
+
+=head1 DESCRIPTION
+
+This is the class used for the creation of new IDMEF alerts from parsed XML objects.
+
+=head1 METHODS
+
+=head2 $idmef->new(%params)
+
+Instanciate Prelude IDMEF object.
+
+=head2 $idmef->setFromXML()
+
+Set a new IDMEF from a given parsed XML. It uses Perl prelude library API.
+
+=head1 SEE ALSO
+
+See L<RFC 4765|https://www.ietf.org/rfc/rfc4765.txt> for further information about IDMEF format.
