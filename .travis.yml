@@ -2,10 +2,8 @@ language: perl
 sudo: required
 dist: trusty
 
-before_script:
-  - cd perl
-
 before_install:
+  - cd perl
   - cpanm --notest Perl::Tidy
   - cpanm --notest Test::Code::TidyAll 
   - cpanm --notest Test::Perl::Critic
