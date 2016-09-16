@@ -13,7 +13,7 @@ sub new {
 
 	my $self = {
 		name   => $params{name},
-		client => Prelude::ClientEasy( $params{name} )->new()
+		client => Prelude::ClientEasy->new( $params{name} )
 	};
 
 	bless $self, $class;
