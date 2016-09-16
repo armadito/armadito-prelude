@@ -73,7 +73,6 @@ sub _handleRegisterResponse() {
 	$self->{logger}->info( $response->content() );
 	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
-	# Update armadito agent_id
 	if ( defined( $obj->{token} ) ) {
 		$self->{token} = $obj->{token};
 		$self->{logger}->info( "ArmaditAV Registration successful, session token : " . $obj->{token} );
