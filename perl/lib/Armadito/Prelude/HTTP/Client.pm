@@ -9,7 +9,7 @@ use LWP::UserAgent;
 use UNIVERSAL::require;
 
 use Armadito::Prelude;
-use Armadito::Prelude::Logger;
+use Armadito::Prelude::Logger qw(LOG_DEBUG2);
 
 my $log_prefix = "[http client] ";
 
