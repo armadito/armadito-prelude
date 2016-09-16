@@ -4,7 +4,7 @@
 .last_cover_stats
 .tidyall.d/
 /.build/
-/Armadito-Perl*.tar.gz
+/Armadito-Prelude*.tar.gz
 /MANIFEST.bak
 /META.json
 /META.yml
@@ -14,7 +14,7 @@
 /_eumm/
 /blib/
 /pm_to_blib
-Armadito-Perl-*
+Armadito-Prelude-*
 Build
 Build.bat
 _build/
