@@ -7,10 +7,12 @@ use UNIVERSAL::require;
 use Module::Runtime qw(use_module);
 
 SKIP: {
-	my $prelude = use_module("Prelude");
+	eval {
+	   use_module("Prelude");
+	};
 
 	skip( 'compile tests need Prelude library', 1 )
-		if !$prelude;
+		if $@;
 
 	my @scripts = qw(mod2html podtree2html pods2html perl2html);
 	my $test    = Test::Compile->new();
