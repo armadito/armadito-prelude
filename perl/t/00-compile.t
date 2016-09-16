@@ -7,9 +7,7 @@ use UNIVERSAL::require;
 use Module::Runtime qw(use_module);
 
 SKIP: {
-	eval {
-	   use_module("Prelude");
-	};
+	eval { use_module("Prelude"); };
 
 	skip( 'compile tests need Prelude library', 1 )
 		if $@;
