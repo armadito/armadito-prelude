@@ -7,35 +7,35 @@ use base 'Armadito::Prelude::Logger::Backend';
 use Sys::Syslog qw(:standard :macros);
 
 my %syslog_levels = (
-    error   => LOG_ERR,
-    warning => LOG_WARNING,
-    info    => LOG_INFO,
-    debug   => LOG_DEBUG,
-    debug2   => LOG_DEBUG
+	error   => LOG_ERR,
+	warning => LOG_WARNING,
+	info    => LOG_INFO,
+	debug   => LOG_DEBUG,
+	debug2  => LOG_DEBUG
 );
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = {};
-    bless $self, $class;
+	my $self = {};
+	bless $self, $class;
 
-    openlog("armadito-prelude", 'cons,pid', $params{config}->{logfacility});
+	openlog( "armadito-prelude", 'cons,pid', $params{config}->{logfacility} );
 
-    return $self;
+	return $self;
 }
 
 sub addMessage {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $level = $params{level};
-    my $message = $params{message};
+	my $level   = $params{level};
+	my $message = $params{message};
 
-    syslog($syslog_levels{$level}, $message);
+	syslog( $syslog_levels{$level}, $message );
 }
 
 sub DESTROY {
-    closelog();
+	closelog();
 }
 
 1;

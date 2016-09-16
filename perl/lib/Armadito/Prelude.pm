@@ -14,8 +14,8 @@ use Armadito::Prelude::XML::Parser;
 use Armadito::Prelude::Tools::Dir qw(readDirectory);
 use Armadito::Prelude::Tools::File qw(readFile);
 
-our $VERSION = "0.0.3";
-our $AGENT_STRING = "Armadito-Prelude_v".$VERSION;
+our $VERSION      = "0.0.3";
+our $AGENT_STRING = "Armadito-Prelude_v" . $VERSION;
 
 sub new {
 	my ( $class, %params ) = @_;

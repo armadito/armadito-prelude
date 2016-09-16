@@ -5,12 +5,12 @@ use warnings;
 use base qw/Exporter/;
 
 use constant {
-    LOG_DEBUG2  => 5,
-    LOG_DEBUG   => 4,
-    LOG_INFO    => 3,
-    LOG_WARNING => 1,
-    LOG_ERROR   => 1,
-    LOG_NONE    => 0,
+	LOG_DEBUG2  => 5,
+	LOG_DEBUG   => 4,
+	LOG_INFO    => 3,
+	LOG_WARNING => 1,
+	LOG_ERROR   => 1,
+	LOG_NONE    => 0,
 };
 
 use English qw(-no_match_vars);
@@ -19,104 +19,99 @@ use UNIVERSAL::require;
 our @EXPORT = qw/LOG_DEBUG2 LOG_DEBUG LOG_INFO LOG_WARNING LOG_ERROR LOG_NONE/;
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = {
-        verbosity => defined $params{verbosity} ? $params{verbosity} : LOG_INFO,
-    };
-    bless $self, $class;
+	my $self = { verbosity => defined $params{verbosity} ? $params{verbosity} : LOG_INFO, };
+	bless $self, $class;
 
-    my %backends;
-    foreach (
-        $params{backends} ? @{$params{backends}} : 'Stderr'
-    ) {
-        my $backend = ucfirst($_);
-        next if $backends{$backend};
-        my $package = "Armadito::Prelude::Logger::$backend";
-        $package->require();
-        if ($EVAL_ERROR) {
-            print STDERR
-                "Failed to load Logger backend $backend: ($EVAL_ERROR)\n";
-            next;
-        }
-        $backends{$backend} = 1;
+	my %backends;
+	foreach ( $params{backends} ? @{ $params{backends} } : 'Stderr' ) {
+		my $backend = ucfirst($_);
+		next if $backends{$backend};
+		my $package = "Armadito::Prelude::Logger::$backend";
+		$package->require();
+		if ($EVAL_ERROR) {
+			print STDERR "Failed to load Logger backend $backend: ($EVAL_ERROR)\n";
+			next;
+		}
+		$backends{$backend} = 1;
 
-        $self->debug("Logger backend $backend initialised");
-        push
-            @{$self->{backends}},
-            $package->new(%params);
-    }
+		$self->debug("Logger backend $backend initialised");
+		push
+			@{ $self->{backends} },
+			$package->new(%params);
+	}
 
-    $self->debug($Armadito::Prelude::VERSION_STRING);
+	$self->debug($Armadito::Prelude::VERSION_STRING);
 
-    return $self;
+	return $self;
 }
 
 sub _log {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    # levels: debug2, debug, info, error, fault
-    my $level = $params{level} || 'info';
-    my $message = $params{message};
+	# levels: debug2, debug, info, error, fault
+	my $level = $params{level} || 'info';
+	my $message = $params{message};
 
-    return unless $message;
+	return unless $message;
 
-    chomp($message);
+	chomp($message);
 
-    foreach my $backend (@{$self->{backends}}) {
-        $backend->addMessage (
-            level => $level,
-            message => $message
-        );
-    }
+	foreach my $backend ( @{ $self->{backends} } ) {
+		$backend->addMessage(
+			level   => $level,
+			message => $message
+		);
+	}
 }
 
 sub debug2 {
-    my ($self, $message) = @_;
+	my ( $self, $message ) = @_;
 
-    return unless $self->{verbosity} >= LOG_DEBUG2;
-    $self->_log(level => 'debug2', message => $message);
+	return unless $self->{verbosity} >= LOG_DEBUG2;
+	$self->_log( level => 'debug2', message => $message );
 }
 
 sub debug {
-    my ($self, $message) = @_;
+	my ( $self, $message ) = @_;
 
-    return unless $self->{verbosity} >= LOG_DEBUG;
-    $self->_log(level => 'debug', message => $message);
+	return unless $self->{verbosity} >= LOG_DEBUG;
+	$self->_log( level => 'debug', message => $message );
 }
 
 sub debug_result {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    return unless $self->{verbosity} >= LOG_DEBUG;
+	return unless $self->{verbosity} >= LOG_DEBUG;
 
-    my $status = $params{status} || ($params{data} ? 'success' : 'no result');
+	my $status = $params{status} || ( $params{data} ? 'success' : 'no result' );
 
-    $self->_log(
-        level   => 'debug',
-        message => sprintf('- %s: %s', $params{action}, $status)
-    );
+	$self->_log(
+		level   => 'debug',
+		message => sprintf( '- %s: %s', $params{action}, $status )
+	);
 }
 
 sub info {
-    my ($self, $message) = @_;
+	my ( $self, $message ) = @_;
 
-    return unless $self->{verbosity} >= LOG_INFO;
-    $self->_log(level => 'info', message => $message);
+	return unless $self->{verbosity} >= LOG_INFO;
+	$self->_log( level => 'info', message => $message );
 }
 
 sub warning {
-    my ($self, $message) = @_;
+	my ( $self, $message ) = @_;
 
-    return unless $self->{verbosity} >= LOG_WARNING;
-    $self->_log(level => 'warning', message => $message);
+	return unless $self->{verbosity} >= LOG_WARNING;
+	$self->_log( level => 'warning', message => $message );
 }
 
 sub error {
-    my ($self, $message) = @_;
+	my ( $self, $message ) = @_;
 
-    return unless $self->{verbosity} >= LOG_ERROR;
-    $self->_log(level => 'error', message => $message);
+	return unless $self->{verbosity} >= LOG_ERROR;
+	$self->_log( level => 'error', message => $message );
 }
 
 1;
