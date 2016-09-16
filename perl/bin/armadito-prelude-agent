@@ -19,6 +19,7 @@ GetOptions(
 	'input|i=s',
 	'setup',
 	'max=i',
+	'action|a=s',
 	'help|h',
 	'no-rm',
 	'version|v',
@@ -72,7 +73,8 @@ armadito-prelude --input <alertsdir>
 
   Options:
     --help                 this menu
-    --input alertsdir      Armadito alerts directory
+    -i --input alertsdir   Armadito alerts directory
+    -a --action action     Action ( status | scan )
     --max   max            Maximum alerts processed (>0)
     --no-rm 		   Do not remove alerts after processing (not by default).
     --setup 		   Show setup paths
@@ -81,6 +83,8 @@ armadito-prelude --input <alertsdir>
 
 	% armadito-prelude --input /var/spool/armadito
 	% armadito-prelude -i $PREFIX/install/var/spool/armadito --max 10
+	% armadito-prelude --action status
+	% armadito-prelude --a scan
 
 =head1 DESCRIPTION
 
@@ -104,5 +108,9 @@ Process alerts up to given maximum (>0).
 
 Do not remove alerts after processing.
 By using that option, be aware that these alerts will be reprocessed if they are still in alerts directory.
+
+=item B<-a>, B<--action>=I<ACTION>
+
+Executes the selected action. 
 
 =back

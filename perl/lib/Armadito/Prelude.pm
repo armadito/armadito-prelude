@@ -37,9 +37,10 @@ sub init {
 	my ( $self, %params ) = @_;
 
 	$self->{prelude_client} = Armadito::Prelude::Client->new( name => "armadito-prelude" );
-	$self->{inputdir}       = $params{options}->{input};
-	$self->{maxalerts}      = $params{options}->{max} ? $params{options}->{max} : -1;
-	$self->{"no-rm"} = defined( $params{options}->{"no-rm"} ) ? 1 : 0;
+	$self->{inputdir}  = $params{options}->{input}              ? $params{options}->{input}  : "";
+	$self->{maxalerts} = $params{options}->{max}                ? $params{options}->{max}    : -1;
+	$self->{"no-rm"}   = defined( $params{options}->{"no-rm"} ) ? 1                          : 0;
+	$self->{action}    = $params{options}->{action}             ? $params{options}->{action} : "";
 
 	return $self;
 }
@@ -66,11 +67,8 @@ sub _processAlert {
 	return 0;
 }
 
-sub run {
+sub _processAlertDir {
 	my ( $self, %params ) = @_;
-
-	$self->{prelude_client}->start();
-
 	my @alerts = readDirectory( dirpath => $self->{inputdir} );
 
 	my $i      = 0;
@@ -83,6 +81,20 @@ sub run {
 	}
 
 	print "$i alerts processed, $errors errors.\n";
+	return $self;
+}
+
+sub run {
+	my ( $self, %params ) = @_;
+
+	$self->{prelude_client}->start();
+
+	if ( $self->{inputdir} ne "" ) {
+		$self->_processAlertDir();
+	}
+	else {
+		print "Action = " . $self->{action} . "\n";
+	}
 
 	return $self;
 }
