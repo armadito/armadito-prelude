@@ -3,9 +3,7 @@ use warnings;
 use Test::More;
 
 ## no critic
-eval {
- use Test::Perl::Critic 1.03;
-};
+eval { use Test::Perl::Critic 1.03; };
 
 plan skip_all => 'Test::Perl::Critic 1.03 required' if $@;
 

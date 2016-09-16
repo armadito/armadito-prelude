@@ -4,9 +4,7 @@ use warnings;
 use Test::More tests => 1;
 
 SKIP: {
-	eval {
-		use Prelude;
-	};
+	eval { use Prelude; };
 
 	skip( 'compile tests need Prelude library', 1 )
 		if $@;
