@@ -6,6 +6,7 @@ use base 'Armadito::Prelude::HTTP::Client::ArmaditoAV::Event';
 use JSON;
 use Data::Dumper;
 use Armadito::Prelude::IDMEF qw( setAnalyzer setClassification setTarget setAssessment setAdditionalData );
+use Armadito::Prelude::Tools::Time qw ( FormatTimestamp );
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -25,14 +26,48 @@ sub _sendToPrelude {
 	return $self;
 }
 
-sub run {
-	my ( $self, %params ) = @_;
-
-	print Dumper( $self->{jobj} );
+sub _setIDMEF {
+	my ( $self, $message ) = @_;
 
 	$self->{idmef}->setAnalyzer();
 
-	# $self->_sendToPrelude();
+	if ( $self->{jobj}->{global_status} eq "up-to-date" ) {
+		$self->{idmef}->setClassification( text => "Armadito Antivirus is up-to-date" );
+		$self->{idmef}->setAssessment( impact_severity => "info" );
+	}
+	else {
+		$self->{idmef}->setClassification( info => "Armadito Antivirus must be updated" );
+		$self->{idmef}->setAssessment( impact_severity => "high" );
+	}
+
+	$self->{idmef}->setAssessment(
+		impact_type        => "other",
+		impact_completion  => "succeeded",
+		impact_description => "Status for Armadito antivirus"
+	);
+
+	$self->{idmef}->setAdditionalData(
+		i       => 0,
+		type    => "string",
+		meaning => "Antivirus status",
+		data    => $self->{jobj}->{global_status}
+	);
+
+	$self->{idmef}->setAdditionalData(
+		i       => 1,
+		type    => "string",
+		meaning => "Last update state",
+		data    => FormatTimestamp( $self->{jobj}->{global_update_timestamp} )
+	);
+
+	return $self;
+}
+
+sub run {
+	my ( $self, %params ) = @_;
+
+	$self->_setIDMEF();
+	$self->_sendToPrelude();
 	$self->{end_polling} = 1;
 
 	return $self;
