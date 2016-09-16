@@ -36,12 +36,20 @@ sub new {
 
 	$self->{obj} = Prelude::IDMEF->new();
 
-	# analyzer
-	$self->{obj}->set( "alert.analyzer(0).name",         "Armadito antivirus" );
-	$self->{obj}->set( "alert.analyzer(0).manufacturer", "www.teclib.com" );
-	$self->{obj}->set( "alert.analyzer(0).class",        "Antivirus" );
-
 	bless $self, $class;
+	return $self;
+}
+
+# See RFC 4765.
+sub setFromXML {
+	my ( $self, %params ) = @_;
+
+	$self->_setAnalyzer($xml);
+	$self->_setClassification($xml);
+	$self->_setTarget($xml);
+	$self->_setAssessment($xml);
+	$self->_setAdditionalData($xml);
+
 	return $self;
 }
 
@@ -55,46 +63,62 @@ sub _getLevelStr {
 		:                 "info";
 }
 
-## RFC 4765 extract :
-#   <!ENTITY % attvals.severity             "
-#       ( info | low | medium | high )
-#     ">
-#   <!ENTITY % attvals.completion           "
-#       ( failed | succeeded )
-#     ">
-#   <!ENTITY % attvals.impacttype           "
-#       ( admin | dos | file | recon | user | other )
-#     ">
+sub _setAnalyzer {
+	my ( $self, $xml ) = @_;
 
-sub setFromXML {
-	my ( $self, %params ) = @_;
+	$self->{obj}->set( "alert.analyzer(0).name",         "Armadito antivirus");
+	$self->{obj}->set( "alert.analyzer(0).manufacturer", "www.teclib.com");
+	$self->{obj}->set( "alert.analyzer(0).class",        "Antivirus");
+	$self->{obj}->set( "alert.analyzer(0).process.name", $xml->{alert}->{identification}->{process}->{value});
+	$self->{obj}->set( "alert.analyzer(0).process.pid",  $xml->{alert}->{identification}->{pid}->{value});
 
-	$self->{obj}->set( "alert.classification.text", "Threat detected" );
+	return $self;
+}
 
-	# Assessment
-	$self->{obj}
-		->set( "alert.assessment.impact.severity", $self->_getLevelStr( $params{xml}->{alert}->{level}->{value} ) );
-	$self->{obj}->set( "alert.assessment.impact.type",       "file" );
-	$self->{obj}->set( "alert.assessment.impact.completion", "succeeded" );
-	$self->{obj}
-		->set( "alert.assessment.impact.description", "virus detected by Armadito antivirus on-access protection" );
+sub _setClassification {
+	my ( $self, $xml ) = @_;
 
-	# Additional Data
-	$self->{obj}->set( "alert.additional_data(0).type",    "string" );
-	$self->{obj}->set( "alert.additional_data(0).meaning", "File location" );
-	$self->{obj}->set( "alert.additional_data(0).data",    $params{xml}->{alert}->{uri}->{value} );
+	$self->{obj}->set( "alert.classification.text", "Virus found: " . $xml->{alert}->{module_specific}->{value});
 
-	$self->{obj}->set( "alert.additional_data(1).type",    "string" );
-	$self->{obj}->set( "alert.additional_data(1).meaning", "Virus name" );
-	$self->{obj}->set( "alert.additional_data(1).data",    $params{xml}->{alert}->{module_specific}->{value} );
+	return $self;
+}
 
-	#	$params{xml}->{alert}->{code}->{value};
-	#	$params{xml}->{alert}->{level}->{value};
-	#	$params{xml}->{alert}->{uri}->{value};
-	#	$params{xml}->{alert}->{gdh}->{value};
-	#	$params{xml}->{alert}->{identification}->{user}->{value};
-	#	$params{xml}->{alert}->{module}->{value};
-	#	$params{xml}->{alert}->{module_specific}->{value};
+sub _setTarget {
+	my ( $self, $xml ) = @_;
+
+	$self->{obj}->set( "alert.target(0).process.name",  $xml->{alert}->{identification}->{process}->{value});
+	$self->{obj}->set( "alert.target(0).process.pid",   $xml->{alert}->{identification}->{pid}->{value});
+	$self->{obj}->set( "alert.target(0).user.category", "application");
+	$self->{obj}->set( "alert.target(0).user.user_id(0).name", $xml->{alert}->{identification}->{user}->{value});
+	$self->{obj}->set( "alert.target(0).node.name", $xml->{alert}->{identification}->{hostname}->{value});
+	$self->{obj}->set( "alert.target(0).node.address.category", "ipv4-addr");
+	$self->{obj}->set( "alert.target(0).node.address.address", $xml->{alert}->{identification}->{ip}->{value});
+
+	return $self;
+}
+
+sub _setAssessment{
+	my ( $self, $xml ) = @_;
+
+	$self->{obj}->set( "alert.assessment.impact.severity", $self->_getLevelStr($xml->{alert}->{level}->{value}));
+	$self->{obj}->set( "alert.assessment.impact.type",       "file");
+	$self->{obj}->set( "alert.assessment.impact.completion", "succeeded");
+	$self->{obj}->set( "alert.assessment.impact.description", "Virus detected by Armadito AV on-access protection");
+
+	return $self;
+}
+
+
+sub _setAdditionalData {
+	my ( $self, $xml ) = @_;
+
+	$self->{obj}->set( "alert.additional_data(0).type",    "string");
+	$self->{obj}->set( "alert.additional_data(0).meaning", "File location");
+	$self->{obj}->set( "alert.additional_data(0).data",    $xml->{alert}->{uri}->{value});
+
+	$self->{obj}->set( "alert.additional_data(1).type",    "string");
+	$self->{obj}->set( "alert.additional_data(1).meaning", "Virus name");
+	$self->{obj}->set( "alert.additional_data(1).data",    $xml->{alert}->{module_specific}->{value});
 
 	return $self;
 }
