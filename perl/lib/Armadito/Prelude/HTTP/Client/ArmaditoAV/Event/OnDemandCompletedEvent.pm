@@ -26,31 +26,12 @@ sub new {
 	delete $self->{jobj}->{total_scanned_count};
 
 	$self->{jobj}->{progress} = 100;
-	$self->{jobj}->{job_id}   = $self->{taskobj}->{job}->{job_id};
 
 	return $self;
 }
 
 sub run {
 	my ( $self, %params ) = @_;
-
-	$self->{taskobj}->{jobj}->{task}->{obj} = $self->{jobj};
-	my $json_text = to_json( $self->{taskobj}->{jobj} );
-
-	my $response = $self->{taskobj}->{glpi_client}->sendRequest(
-		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/scans",
-		message => $json_text,
-		method  => "POST"
-	);
-
-	if ( $response->is_success() ) {
-		$self->{taskobj}->_handleResponse($response);
-		$self->{taskobj}->{logger}->info("Send Scan results successful...");
-	}
-	else {
-		$self->{taskobj}->_handleError($response);
-		$self->{taskobj}->{logger}->info("Send Scan results failed...");
-	}
 
 	$self->{end_polling} = 1;
 

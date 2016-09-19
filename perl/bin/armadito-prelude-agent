@@ -22,6 +22,7 @@ GetOptions(
 	'action|a=s',
 	'help|h',
 	'no-rm',
+	'path=s',
 	'version|v',
 ) or pod2usage(-verbose => 0);
 
@@ -75,6 +76,7 @@ armadito-prelude --input <alertsdir>
     --help                 this menu
     -i --input alertsdir   Armadito alerts directory
     -a --action action     Action ( status | scan )
+    --path scan_path       Scan path (only if action is scan).
     --max   max            Maximum alerts processed (>0)
     --no-rm 		   Do not remove alerts after processing (not by default).
     --setup 		   Show setup paths
@@ -84,7 +86,7 @@ armadito-prelude --input <alertsdir>
 	% armadito-prelude --input /var/spool/armadito
 	% armadito-prelude -i $PREFIX/install/var/spool/armadito --max 10
 	% armadito-prelude --action status
-	% armadito-prelude --a scan
+	% armadito-prelude -a scan --path "/home/armadito/toscandir" 
 
 =head1 DESCRIPTION
 
@@ -112,5 +114,9 @@ By using that option, be aware that these alerts will be reprocessed if they are
 =item B<-a>, B<--action>=I<ACTION>
 
 Executes the selected action. 
+
+=item B<--path>=I<SCAN_PATH>
+
+Path of directory to scan. It is used as a parameter of Armadito AV's RESTful API.
 
 =back

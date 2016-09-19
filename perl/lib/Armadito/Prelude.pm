@@ -42,6 +42,7 @@ sub init {
 	$self->{maxalerts} = $params{options}->{max}                ? $params{options}->{max}    : -1;
 	$self->{"no-rm"}   = defined( $params{options}->{"no-rm"} ) ? 1                          : 0;
 	$self->{action}    = $params{options}->{action}             ? $params{options}->{action} : "";
+	$self->{scanpath}  = $params{options}->{path}               ? $params{options}->{path}   : "";
 
 	return $self;
 }
@@ -104,6 +105,30 @@ sub _getAVStatus {
 	return $self;
 }
 
+sub _getScanAPIMessage {
+	my ($self) = @_;
+	return "{ 'path' : '" . $self->{scanpath} . "' }";
+}
+
+sub _onDemandScan {
+	my ( $self, %params ) = @_;
+
+	$self->{av_client} = Armadito::Prelude::HTTP::Client::ArmaditoAV->new( prelude_client => $self->{prelude_client} );
+	$self->{av_client}->register();
+
+	my $response = $self->{av_client}->sendRequest(
+		"url"   => $self->{av_client}->{server_url} . "/api/scan",
+		message => $self->_getScanAPIMessage(),
+		method  => "POST"
+	);
+
+	die "ArmaditoAV Scan request failed." if ( !$response->is_success() );
+
+	$self->{av_client}->pollEvents();
+	$self->{av_client}->unregister();
+	return $self;
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
@@ -114,6 +139,10 @@ sub run {
 	}
 	elsif ( $self->{action} eq "status" ) {
 		$self->_getAVStatus();
+	}
+	elsif ( $self->{action} eq "scan" ) {
+		die "You must specify a path to be scanned when using scan action." if ( $self->{scanpath} =~ /^\s*$/ );
+		$self->_onDemandScan();
 	}
 
 	return $self;
