@@ -15,7 +15,7 @@ use Armadito::Prelude::Tools::Dir qw(readDirectory);
 use Armadito::Prelude::Tools::File qw(readFile);
 use Armadito::Prelude::HTTP::Client::ArmaditoAV;
 
-our $VERSION      = "0.0.3";
+our $VERSION      = "0.0.4_01";
 our $AGENT_STRING = "Armadito-Prelude_v" . $VERSION;
 
 sub new {

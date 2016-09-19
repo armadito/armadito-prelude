@@ -1,5 +1,9 @@
 Revision history for Perl extension Armadito::Prelude.
 
+0.0.4_01  19/09/2016
+	- added on-demand Scan with Armadito AV RESTful API
+	- added get ArmaditoAV status alert
+
 0.0.3  16/09/2016
         - Send up Armadito AV alerts from a given directory
         - perltidy all
