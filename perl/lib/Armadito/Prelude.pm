@@ -206,6 +206,10 @@ vhamon, E<lt>vhamon@teclib.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
+Copyright (C) 2006-2010 OCS Inventory contributors
+Copyright (C) 2010-2012 FusionInventory Team
 Copyright (C) 2016 by Teclib'
+
+Licensed under GPLv3+.
 
 =cut
