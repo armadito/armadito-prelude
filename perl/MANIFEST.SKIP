@@ -28,7 +28,7 @@ CVS/
 .*\.tmp
 var/
 ^tools*
-^Armadito-Agent.*
+^Armadito-Prelude.*
 /tarballs/
 ^setup.sh
 debian
