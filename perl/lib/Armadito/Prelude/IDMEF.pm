@@ -45,7 +45,7 @@ sub setFromXML {
 		impact_severity    => $self->_getLevelStr( $params{xml}->{alert}->{level}->{value} ),
 		impact_type        => "file",
 		impact_completion  => "succeeded",
-		impact_description => "Virus detected by Armadito AV on-access protection"
+		impact_description => "Virus detected by Armadito AV (on-access protection)"
 	);
 
 	$self->setAdditionalData(
