@@ -67,7 +67,7 @@ Path of the file to be read.
 
 =head2 writeFile(%params)
 
-Returns a fingerprint for this computer.
+Write a scalar to a file in binary mode.
 
 =over
 
